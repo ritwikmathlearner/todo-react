@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
+
+import './App.css';
+
 import { AddForm } from './components/form/AddForm'
 import { Container } from './components/list-container/Container';
-import { useState, useEffect } from 'react';
-import './App.css';
+
 
 function App() {
   const [list, setList] = useState([])
@@ -14,7 +17,7 @@ function App() {
   });
   const sentData = (method, body = null) => {
     if (body)
-      return { method: method, headers: header, body: JSON.stringify(body)}
+      return { method: method, headers: header, body: JSON.stringify(body) }
     else
       return { method: method, headers: header, }
   };
@@ -30,7 +33,7 @@ function App() {
 
   useEffect(() => {
     loadToDos().then(data => {
-      if(data)
+      if (data)
         setList(data)
     })
   }, []);
@@ -54,10 +57,45 @@ function App() {
     }
   }
 
+  const deleteToDo = async (taskname) => {
+    let newList = list.filter(item => item.name !== taskname)
+    try {
+      let body = {
+        "taskname": taskname
+      }
+      let response = await fetch(`${baseUri}todo`, sentData('DELETE', body))
+      if (response.status !== 202)
+        throw new Error('Delete not successful')
+
+      setList(newList)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  const saveToDo = async (taskName) => {
+    try {
+      let body = {
+        "taskname": taskName
+      }
+      let response = await fetch(`${baseUri}api/todo`, sentData('POST', body))
+
+      if (response.status !== 202)
+        throw new Error('Insert not successful')
+
+      let item = await response.json()
+      setList([item, ...list])
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   return (
     <div className="App">
-      <AddForm />
-      {list.length > 0 ? <Container items={list} updateToDo={updateToDo} /> : ''}
+      <AddForm saveToDo={saveToDo} />
+      {list.length > 0 ? <Container items={list} updateToDo={updateToDo} deleteToDo={deleteToDo} /> : ''}
     </div>
   );
 }

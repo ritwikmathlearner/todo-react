@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export const ToDo = ({ item, updateToDo }) => {
+export const ToDo = ({ item, updateToDo, deleteToDo }) => {
 
     const [edit, setEdit] = useState(false)
     const [inputValue, setInputValue] = useState(item.name)
@@ -67,7 +67,7 @@ export const ToDo = ({ item, updateToDo }) => {
             <span className="edit" onClick={showEditContainer}>
                 <i className="fas fa-edit"></i>
             </span>
-            <span className="delete"><i className="fas fa-trash-alt"></i></span>
+            <span className="delete" onClick={() => deleteToDo(item.name)}><i className="fas fa-trash-alt"></i></span>
         </div>
     )
 }
