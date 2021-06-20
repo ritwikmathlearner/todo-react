@@ -9,8 +9,8 @@ export const AddForm = ({saveToDo}) => {
     }
 
     const handleToDoSave = (event) => {
-        if(event.key === 'Enter') {
-            const result = saveToDo(taskName)
+        if(event.key === 'Enter' || event.type === 'click') {
+            saveToDo(taskName)
             setTaskName('')
         }
     }
