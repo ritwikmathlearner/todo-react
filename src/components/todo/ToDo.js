@@ -1,6 +1,60 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { makeRequest } from '../../utils/fetch'
+import { updateToDo as modifyToDO, deleteToDo as removeToDo } from '../../store/actions/toDoActions'
 
-export const ToDo = ({ item, updateToDo, deleteToDo }) => {
+export const ToDo = ({ item }) => {
+
+    const list = useSelector(state => state.toDos.tasks)
+    const dispatch = useDispatch()
+    const existsInList = (taskName) => {
+        let result = list.find(item => item.name.trim() === taskName.trim())
+        
+        if (result)
+            return true
+
+        return false
+    }
+
+    const updateToDo = async (original, toDo) => {
+        if (existsInList(toDo))
+            return false
+
+        try {
+            let body = {
+                oldname: original,
+                newname: toDo
+            }
+            let [status, response] = await makeRequest(['api/todo', 'PATCH', body])
+
+            if (status !== 202)
+                throw new Error('Update not successful')
+
+            let newList = list.map(item => item.name === original ? { ...item, name: toDo } : item)
+            dispatch(modifyToDO(newList))
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+
+    const deleteToDo = async (taskname) => {
+        try {
+            let body = {
+                "taskname": taskname
+            }
+            let [status, response] = await makeRequest(['api/todo', 'DELETE', body])
+            
+            if (status !== 202)
+                throw new Error('Delete not successful')
+            
+            let newList = list.filter(item => item.name !== taskname)
+            dispatch(removeToDo(newList))
+            return true
+        } catch (error) {
+            return false
+        }
+    }
 
     const [edit, setEdit] = useState(false)
     const [inputValue, setInputValue] = useState(item.name)
@@ -34,7 +88,6 @@ export const ToDo = ({ item, updateToDo, deleteToDo }) => {
                     if (result) {
                         restoreParagraph(inputValue)
                     } else {
-                        console.log(item.name)
                         restoreParagraph(item.name)
                         setError(true)
                         setTimeout(() => {
