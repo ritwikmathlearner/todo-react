@@ -37,7 +37,7 @@ export const AddForm = () => {
     return (
         <div className="add-form">
             <label htmlFor="taskname">Task Name</label>
-            <input type="text" className="name" value={taskName} onChange={handleChange} onKeyPress={handleToDoSave} />
+            <input type="text" className="name" value={taskName} onChange={handleChange} onKeyPress={handleToDoSave} autoFocus />
             <br />
             <button type="button" className="btn" onClick={handleToDoSave}>Create</button>
         </div>

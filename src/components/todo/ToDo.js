@@ -25,7 +25,7 @@ export const ToDo = ({ item }) => {
                 oldname: original,
                 newname: toDo
             }
-            let [status, response] = await makeRequest(['api/todo', 'PATCH', body])
+            let [status] = await makeRequest(['api/todo', 'PATCH', body])
 
             if (status !== 202)
                 throw new Error('Update not successful')
@@ -43,7 +43,7 @@ export const ToDo = ({ item }) => {
             let body = {
                 "taskname": taskname
             }
-            let [status, response] = await makeRequest(['api/todo', 'DELETE', body])
+            let [status] = await makeRequest(['api/todo', 'DELETE', body])
             
             if (status !== 202)
                 throw new Error('Delete not successful')

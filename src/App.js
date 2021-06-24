@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { Switch, Route, useHistory } from "react-router-dom"
+import { Switch, Route } from "react-router-dom"
 
 import './App.css'
 
@@ -7,32 +6,9 @@ import { AddForm } from './components/form/AddForm'
 import { Container } from './components/list-container/Container'
 import { LoginForm } from './components/login/LoginForm'
 import { Anchor } from './components/elements/Anchor'
-import { makeRequest } from './utils/fetch'
-import { useSelector } from 'react-redux'
 
 
 function App() {
-  const saveToDo = async (taskName) => {
-    // try {
-    //   let body = {
-    //     "taskname": taskName
-    //   }
-
-    //   if (existsInList(taskName))
-    //     return
-
-    //   let response = await makeRequest(['api/todo', 'POST', body])
-    //   if (response.status !== 202)
-    //     throw new Error('Insert not successful')
-
-    //   let item = await response.json()
-    //   setList([...list, item])
-    //   return true
-    // } catch (error) {
-    //   return false
-    // }
-  }
-
   return (
     <div className="App">
       <Switch>
