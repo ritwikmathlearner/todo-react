@@ -1,17 +1,36 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { saveToDo } from '../../store/actions/toDoActions';
+import { makeRequest } from '../../utils/fetch';
 
-export const AddForm = ({saveToDo}) => {
+export const AddForm = () => {
 
     const [taskName, setTaskName] = useState('');
-    
+    const list = useSelector(state => state.toDos.tasks)
+    const dispatch = useDispatch()
+
     const handleChange = (event) => {
         setTaskName(event.target.value)
     }
 
-    const handleToDoSave = (event) => {
-        if(event.key === 'Enter' || event.type === 'click') {
-            saveToDo(taskName)
-            setTaskName('')
+    const handleToDoSave = async (event) => {
+        if ((event.key === 'Enter' || event.type === 'click') && taskName !== '') {
+            try {
+                let body = {
+                    "taskname": taskName
+                }
+                setTaskName('')
+
+                let [status, response] = await makeRequest(['api/todo', 'POST', body])
+
+                if (status !== 202)
+                    throw new Error('Insert not successful')
+                
+                dispatch(saveToDo([...list, response]))
+                return true
+            } catch (error) {
+                return false
+            }
         }
     }
 

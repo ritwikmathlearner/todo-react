@@ -21,5 +21,6 @@ const sentData = (method, body = null) => {
 export const makeRequest = async (arr) => {
     let [url, method, body] = arr
     const response =  await fetch(`${baseUri}${url}`, sentData(method, body))
-    return [response.status, response.json()]
+    const data = await response.json()
+    return [response.status, data]
 }

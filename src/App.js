@@ -38,7 +38,7 @@ function App() {
       <Switch>
         <Route exact path="/">
           {/* {loggedIn ? <Anchor classText="link" path="/logout" innerText="Logout" /> : <Anchor classText="link" path="/login" innerText="Login" />} */}
-          <AddForm saveToDo={saveToDo} />
+          <AddForm />
           <Container />
         </Route>
         <Route path="/login">
