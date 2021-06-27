@@ -2,23 +2,15 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeRequest } from '../../utils/fetch'
 import { updateToDo as modifyToDO, deleteToDo as removeToDo } from '../../store/actions/toDoActions'
+import { existsInList } from '../../utils/validation'
 
 export const ToDo = ({ item }) => {
 
     const list = useSelector(state => state.toDos.tasks)
     const dispatch = useDispatch()
-    const existsInList = (taskName) => {
-        let result = list.find(item => item.name.trim() === taskName.trim())
-        
-        if (result)
-            return true
-
-        return false
-    }
 
     const updateToDo = async (original, toDo) => {
-        if (existsInList(toDo))
-            return false
+        if(existsInList([list, inputValue])) return
 
         try {
             let body = {
@@ -38,7 +30,7 @@ export const ToDo = ({ item }) => {
         }
     }
 
-    const deleteToDo = async (taskname) => {
+    const deleteToDo = async ([taskname, id]) => {
         try {
             let body = {
                 "taskname": taskname
@@ -48,7 +40,7 @@ export const ToDo = ({ item }) => {
             if (status !== 202)
                 throw new Error('Delete not successful')
             
-            let newList = list.filter(item => item.name !== taskname)
+            let newList = list.filter(item => item._id !== id)
             dispatch(removeToDo(newList))
             return true
         } catch (error) {
@@ -120,7 +112,7 @@ export const ToDo = ({ item }) => {
             <span className="edit" onClick={showEditContainer}>
                 <i className="fas fa-edit"></i>
             </span>
-            <span className="delete" onClick={() => deleteToDo(item.name)}><i className="fas fa-trash-alt"></i></span>
+            <span className="delete" onClick={() => deleteToDo([item.name, item._id])}><i className="fas fa-trash-alt"></i></span>
         </div>
     )
 }

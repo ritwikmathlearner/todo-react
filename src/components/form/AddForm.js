@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { saveToDo } from '../../store/actions/toDoActions';
 import { makeRequest } from '../../utils/fetch';
+import { existsInList } from '../../utils/validation';
 
 export const AddForm = () => {
 
@@ -20,6 +21,7 @@ export const AddForm = () => {
                     "taskname": taskName
                 }
                 setTaskName('')
+                if(existsInList([list, taskName])) return
 
                 let [status, response] = await makeRequest(['api/todo', 'POST', body])
 
